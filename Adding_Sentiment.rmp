@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="9.10.010">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="9.10.010" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="9.10.010" expanded="true" height="68" name="Retrieve Covid_dataset1" width="90" x="45" y="34">
+        <parameter key="repository_entry" value="../Data /Covid_dataset1"/>
+      </operator>
+      <operator activated="true" class="operator_toolbox:extract_sentiment" compatibility="2.13.000" expanded="true" height="103" name="Extract Sentiment" width="90" x="313" y="136">
+        <parameter key="model" value="vader"/>
+        <parameter key="text_attribute" value="Text"/>
+        <parameter key="show_advanced_output" value="false"/>
+        <parameter key="use_default_tokenization_regex" value="true"/>
+        <list key="additional_words"/>
+      </operator>
+      <operator activated="true" class="generate_attributes" compatibility="9.10.010" expanded="true" height="82" name="Generate Attributes" width="90" x="514" y="136">
+        <list key="function_descriptions">
+          <parameter key="sentiment" value="if (Score &gt; 0 , &quot;Positive&quot; , if ( Score &lt; 0 , &quot;Negative&quot; , if(Score== 0 , &quot;neutral&quot;, &quot;&quot;)))"/>
+        </list>
+        <parameter key="keep_all" value="true"/>
+      </operator>
+      <operator activated="true" class="write_excel" compatibility="9.10.010" expanded="true" height="103" name="Write Excel" width="90" x="648" y="187">
+        <parameter key="excel_file" value="/Users/pratikkhurd/Downloads/Twitter Dataset/Covid_twitter_dataset.xlsx"/>
+        <parameter key="file_format" value="xlsx"/>
+        <enumeration key="sheet_names"/>
+        <parameter key="sheet_name" value="RapidMiner Data"/>
+        <parameter key="date_format" value="yyyy-MM-dd HH:mm:ss"/>
+        <parameter key="number_format" value="#.0"/>
+        <parameter key="encoding" value="SYSTEM"/>
+      </operator>
+      <connect from_op="Retrieve Covid_dataset1" from_port="output" to_op="Extract Sentiment" to_port="exa"/>
+      <connect from_op="Extract Sentiment" from_port="exa" to_op="Generate Attributes" to_port="example set input"/>
+      <connect from_op="Generate Attributes" from_port="example set output" to_op="Write Excel" to_port="input"/>
+      <connect from_op="Write Excel" from_port="through" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+    </process>
+  </operator>
+</process>

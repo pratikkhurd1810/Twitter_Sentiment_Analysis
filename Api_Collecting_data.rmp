@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="9.10.010">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="9.10.010" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="social_media:search_twitter" compatibility="9.6.000" expanded="true" height="82" name="Search Twitter" width="90" x="45" y="136">
+        <parameter key="connection_source" value="repository"/>
+        <parameter key="connection_entry" value="/Connections/Twitter_Connection"/>
+        <parameter key="query" value="&quot;covid&quot;"/>
+        <parameter key="result_type" value="recent or popular"/>
+        <parameter key="limit" value="15000"/>
+        <parameter key="filter_by_geo_location" value="false"/>
+        <parameter key="radius_unit" value="miles"/>
+      </operator>
+      <operator activated="true" class="write_excel" compatibility="9.10.010" expanded="true" height="103" name="Write Excel" width="90" x="313" y="136">
+        <parameter key="excel_file" value="/Users/pratikkhurd/Downloads/Twitter Dataset/Covid_dataset.xlsx"/>
+        <parameter key="file_format" value="xlsx"/>
+        <enumeration key="sheet_names"/>
+        <parameter key="sheet_name" value="RapidMiner Data"/>
+        <parameter key="date_format" value="yyyy-MM-dd HH:mm:ss"/>
+        <parameter key="number_format" value="#.0"/>
+        <parameter key="encoding" value="SYSTEM"/>
+      </operator>
+      <connect from_op="Search Twitter" from_port="output" to_op="Write Excel" to_port="input"/>
+      <connect from_op="Write Excel" from_port="through" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+    </process>
+  </operator>
+</process>
